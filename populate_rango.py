@@ -47,7 +47,10 @@ def populate():
         title="Flask",
         url="http://flask.pocoo.org")
 
-
+    for cat, cat_data in cats.items():
+        c = add_cat(cat)
+        for p in cat_data["pages"]:
+            add_page(c, p["title"], p["url"])
 
     cats = {
         "Python": {"pages": python_pages},
@@ -56,19 +59,9 @@ def populate():
     }
 
 
-    for cat, cat_data in cats.items():
-        c = add_cat(cat)
-        for p in cat_data["pages"]:
-            add_page(c, p["title"], p["url"])
-
-    # Print out the categories we have added.    
-    for c in Category.objects.all():
-        for p in Page.objects.filter(category=c):
-            print("- {0} - {1}".format(str(c), str(p)))
-
-
-def add_page(cat, title, url,views):
+def add_page(cat, title, url):
     p = Page.objects.get_or_create(category=cat, title=title)[0]
     p.url = url
-    p.views = views
+    p.views = random.randint(0,9999)
     p.save()
+    return p
